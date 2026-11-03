@@ -1,9 +1,6 @@
 package com.pluralsight;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -42,8 +39,8 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-    LocalDate dateNow =LocalDate.now();
-
+    LocalDate dateNow = LocalDate.now();
+   public static String lastTransaction;
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
 
@@ -80,11 +77,35 @@ public class FinancialTracker {
      * • If the file doesn’t exist, create an empty one so that future writes succeed.
      * • Each line looks like: date|time|description|vendor|amount
      */
+    //listing all the csv file history.
     public static void loadTransactions(String fileName) {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
         //       and add it to the transactions list.
 
+        try {
+            BufferedWriter bufferedWriter =new BufferedWriter(new FileWriter(FILE_NAME,true));
+            bufferedWriter.newLine();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            String line;
+            String amount = null;
+            while ((line = bufferedReader.readLine()) != null){
+                String[] parts =line.split("\\|");
+                Transaction transaction = new Transaction(parts[0],parts[1],parts[2],parts[3]," d$"+ parts[4]);
+                lastTransaction = transaction.toString();
+                amount = "$" + parts[4];
+
+            }
+            if (lastTransaction != null){
+                System.out.println("Latest Transaction:");
+                System.out.println(amount);
+            }else {
+                System.out.println("no transaction yet");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Something went wrong " + e);
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -121,10 +142,11 @@ public class FinancialTracker {
                 //saving to CSV file.
                 Transaction transaction = new Transaction(dateNow.toString(), timeNow.format(TIME_FMT), description, vendor, amount);
                 transactions.add(transaction);
-                bufferedWriter.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + transaction.getAmount());
+                bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | " + transaction.getVendor() + " |" + transaction.getAmount());
                 bufferedWriter.newLine();
                 bufferedWriter.close();
-                System.out.println("$" + amount +" Deposited successfully\n");
+                loadTransactions(FILE_NAME);
+                System.out.println(lastTransaction + " Deposited successfully\n");
                 System.out.println("X TO exit");
                 String input = scanner.nextLine();
                 if (input.equalsIgnoreCase("x")){
