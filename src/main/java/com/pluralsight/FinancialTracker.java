@@ -40,7 +40,7 @@ public class FinancialTracker {
        Main menu
        ------------------------------------------------------------------ */
     LocalDate dateNow = LocalDate.now();
-   public static String lastTransaction;
+   public static String lastTransaction;    // Holds latest transaction
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
 
@@ -84,6 +84,7 @@ public class FinancialTracker {
         //       and add it to the transactions list.
 
         try {
+
             BufferedWriter bufferedWriter =new BufferedWriter(new FileWriter(FILE_NAME,true));
             bufferedWriter.newLine();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
@@ -91,7 +92,7 @@ public class FinancialTracker {
             String amount = null;
             while ((line = bufferedReader.readLine()) != null){
                 String[] parts =line.split("\\|");
-                Transaction transaction = new Transaction(parts[0],parts[1],parts[2],parts[3]," d$"+ parts[4]);
+                Transaction transaction = new Transaction(parts[0],parts[1],parts[2],parts[3]," $"+ parts[4]);
                 lastTransaction = transaction.toString();
                 amount = "$" + parts[4];
 
@@ -124,25 +125,15 @@ public class FinancialTracker {
         while (!exit) {
             try {
                 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
-                LocalDate dateNow = LocalDate.now();
-                LocalTime timeNow = LocalTime.now();
 
-                System.out.println();
-                System.out.println("Please Enter amount:\nAmount: ");
-                String amount =  scanner.nextLine();
-
-                if (!isnumber(amount)){
-                    System.out.println("Invalid input pleas use number more than 0!");
-                    return;
-                }
-                System.out.println("Please Enter the vendor:\nVendor: ");
-                String vendor = scanner.nextLine();
-                System.out.print("Description: ");
-                String description = scanner.nextLine();
                 //saving to CSV file.
-                Transaction transaction = new Transaction(dateNow.toString(), timeNow.format(TIME_FMT), description, vendor, amount);
+                Transaction transaction = new Transaction(transactionInfo(scanner).date,transactionInfo(scanner).time,
+                        transactionInfo(scanner).amount,transactionInfo(scanner).vendor,transactionInfo(scanner).description);
+
                 transactions.add(transaction);
-                bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | " + transaction.getVendor() + " |" + transaction.getAmount());
+                bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
+                        + transaction.getVendor() + " |" + "+" + transaction.getAmount());
+
                 bufferedWriter.newLine();
                 bufferedWriter.close();
                 loadTransactions(FILE_NAME);
@@ -167,6 +158,7 @@ public class FinancialTracker {
      */
     private static void addPayment(Scanner scanner) {
         // TODO
+
     }
 
     /* ------------------------------------------------------------------
@@ -264,6 +256,7 @@ public class FinancialTracker {
         /* TODO – return Double   or null */
         return null;
     }
+    //Validating user input if it is number or not
     public static boolean isnumber (String userInput){
         try {
             Double.parseDouble(userInput);
@@ -272,5 +265,25 @@ public class FinancialTracker {
             return false;
         }
 
+    }
+    public static Transaction transactionInfo (Scanner scanner){
+
+        LocalDate dateNow = LocalDate.now();
+        LocalTime timeNow = LocalTime.now();
+
+        System.out.println();
+        System.out.println("Please Enter amount:\nAmount: ");
+        String amount =  scanner.nextLine();
+
+        if (!isnumber(amount)){
+            System.out.println("Invalid input pleas use number more than 0!");
+            return null;
+        }
+        System.out.println("Please Enter the vendor:\nVendor: ");
+        String vendor = scanner.nextLine();
+        System.out.print("Description: ");
+        String description = scanner.nextLine();
+
+        return new Transaction(dateNow.toString(),timeNow.format(TIME_FMT),amount,vendor,description);
     }
 }
