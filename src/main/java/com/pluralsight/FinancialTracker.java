@@ -84,6 +84,7 @@ public class FinancialTracker {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
         //       and add it to the transactions list.
+
     }
 
     /* ------------------------------------------------------------------
@@ -96,6 +97,7 @@ public class FinancialTracker {
      * Validate that the amount entered is positive.
      * Store the amount as-is (positive) and append to the file.
      */
+    // This method asks the user for deposit information and saves it to CSV file.
     private static void addDeposit(Scanner scanner) {
         boolean exit = false;
         while (!exit) {
@@ -108,7 +110,6 @@ public class FinancialTracker {
                 System.out.println("Please Enter amount:\nAmount: ");
                 String amount =  scanner.nextLine();
 
-
                 if (!isnumber(amount)){
                     System.out.println("Invalid input pleas use number more than 0!");
                     return;
@@ -117,13 +118,19 @@ public class FinancialTracker {
                 String vendor = scanner.nextLine();
                 System.out.print("Description: ");
                 String description = scanner.nextLine();
-
+                //saving to CSV file.
                 Transaction transaction = new Transaction(dateNow.toString(), timeNow.format(TIME_FMT), description, vendor, amount);
                 transactions.add(transaction);
                 bufferedWriter.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + transaction.getAmount());
                 bufferedWriter.newLine();
                 bufferedWriter.close();
-                exit = true;
+                System.out.println("$" + amount +" Deposited successfully\n");
+                System.out.println("X TO exit");
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("x")){
+                    exit = true;
+                }
+
 
             } catch (Exception e) {
                 System.out.println("Some thing went wrong " + e);
