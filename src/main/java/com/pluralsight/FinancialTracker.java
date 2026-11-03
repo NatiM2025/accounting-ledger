@@ -1,6 +1,9 @@
 package com.pluralsight;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +42,8 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
+    LocalDate dateNow =LocalDate.now();
+
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
 
@@ -92,7 +97,37 @@ public class FinancialTracker {
      * Store the amount as-is (positive) and append to the file.
      */
     private static void addDeposit(Scanner scanner) {
-        // TODO
+        boolean exit = false;
+        while (!exit) {
+            try {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
+                LocalDate dateNow = LocalDate.now();
+                LocalTime timeNow = LocalTime.now();
+
+                System.out.println();
+                System.out.println("Please Enter amount:\nAmount: ");
+                Double amount =  scanner.nextDouble();
+                if (amount >0){
+                    System.out.println("Invalid input pleas use number more than 0!");
+                    return;
+                }
+                scanner.nextLine();
+                System.out.println("Please Enter the vendor:\nVendor: ");
+                String vendor = scanner.nextLine();
+                System.out.print("Description: ");
+                String description = scanner.nextLine();
+
+                Transaction transaction = new Transaction(dateNow.toString(), timeNow.format(TIME_FMT), description, vendor, amount);
+                transactions.add(transaction);
+                bufferedWriter.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + transaction.getAmount());
+                bufferedWriter.newLine();
+                bufferedWriter.close();
+
+
+            } catch (Exception e) {
+                System.out.println("Some thing went wrong " + e);
+            }
+        }
     }
 
     /**

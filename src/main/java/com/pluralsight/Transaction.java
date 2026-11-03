@@ -51,19 +51,12 @@ public class Transaction {
         return date;
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "date='" + date + '\'' +
-                ", time='" + time + '\'' +
-                ", description='" + description + '\'' +
-                ", vendor='" + vendor + '\'' +
-                ", amount=" + amount +
-                '}';
-    }
-
     public void setDate(String date) {
         this.date = date;
-    }
 
+    }
+    @Override
+    public String toString() {
+        return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+    }
 }
