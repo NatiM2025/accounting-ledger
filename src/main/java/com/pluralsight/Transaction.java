@@ -5,9 +5,9 @@ public class Transaction {
     String time;
     String description;
     String vendor;
-    Double amount;
+    String amount;
 
-    public Transaction(String date, String time, String description, String vendor, Double amount) {
+    public Transaction(String date, String time, String description, String vendor, String amount) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -15,11 +15,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Double getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 

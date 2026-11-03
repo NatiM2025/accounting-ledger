@@ -106,12 +106,13 @@ public class FinancialTracker {
 
                 System.out.println();
                 System.out.println("Please Enter amount:\nAmount: ");
-                Double amount =  scanner.nextDouble();
-                if (amount >0){
+                String amount =  scanner.nextLine();
+
+
+                if (!isnumber(amount)){
                     System.out.println("Invalid input pleas use number more than 0!");
                     return;
                 }
-                scanner.nextLine();
                 System.out.println("Please Enter the vendor:\nVendor: ");
                 String vendor = scanner.nextLine();
                 System.out.print("Description: ");
@@ -122,7 +123,7 @@ public class FinancialTracker {
                 bufferedWriter.write(transaction.getDate() + "|" + transaction.getTime() + "|" + transaction.getDescription() + "|" + transaction.getVendor() + "|" + transaction.getAmount());
                 bufferedWriter.newLine();
                 bufferedWriter.close();
-
+                exit = true;
 
             } catch (Exception e) {
                 System.out.println("Some thing went wrong " + e);
@@ -233,5 +234,14 @@ public class FinancialTracker {
     private static Double parseDouble(String s) {
         /* TODO – return Double   or null */
         return null;
+    }
+    public static boolean isnumber (String userInput){
+        try {
+            Double.parseDouble(userInput);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }
