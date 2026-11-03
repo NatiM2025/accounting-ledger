@@ -100,6 +100,7 @@ public class FinancialTracker {
             if (lastTransaction != null){
                 System.out.println("Latest Transaction:");
                 System.out.println(amount);
+
             }else {
                 System.out.println("no transaction yet");
             }
@@ -124,12 +125,10 @@ public class FinancialTracker {
         boolean exit = false;
         while (!exit) {
             try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILE_NAME, true));
 
                 //saving to CSV file.
-                Transaction transaction = new Transaction(transactionInfo(scanner).date,transactionInfo(scanner).time,
-                        transactionInfo(scanner).amount,transactionInfo(scanner).vendor,transactionInfo(scanner).description);
-
+                Transaction transaction = transactionInfo(scanner);
                 transactions.add(transaction);
                 bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
                         + transaction.getVendor() + " |" + "+" + transaction.getAmount());
@@ -158,7 +157,29 @@ public class FinancialTracker {
      */
     private static void addPayment(Scanner scanner) {
         // TODO
+        // saving to file
+        boolean exit = false;
+        while (!exit){
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILE_NAME,true));
+            Transaction transaction = transactionInfo(scanner);
+            transactions.add(transaction);
+            bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
+                    + transaction.getVendor() + " |" + "-" + transaction.getAmount());
+            bufferedWriter.newLine();
+            bufferedWriter.close();
 
+            loadTransactions(FILE_NAME);
+            System.out.println(lastTransaction + " Payed Successfully");
+            System.out.println("X TO exit");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("x")){
+                exit = true;
+            }
+            } catch (Exception e) {
+               System.out.println("something went wrong " + e);
+            }
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -256,34 +277,31 @@ public class FinancialTracker {
         /* TODO – return Double   or null */
         return null;
     }
-    //Validating user input if it is number or not
-    public static boolean isnumber (String userInput){
-        try {
-            Double.parseDouble(userInput);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
-
-    }
+    // getting user information to reuse there info
     public static Transaction transactionInfo (Scanner scanner){
 
         LocalDate dateNow = LocalDate.now();
         LocalTime timeNow = LocalTime.now();
 
+        //Validating user input if it is number or not
         System.out.println();
-        System.out.println("Please Enter amount:\nAmount: ");
-        String amount =  scanner.nextLine();
-
-        if (!isnumber(amount)){
-            System.out.println("Invalid input pleas use number more than 0!");
-            return null;
+        String amount = "";
+        while (true){
+            System.out.println("Please Enter amount:\nAmount: ");
+           if (scanner.hasNextDouble()){
+               amount = scanner.nextLine();
+               break;
+           }else {
+               scanner.nextLine();
+               System.out.println("Invalid input ");
+           }
         }
+
         System.out.println("Please Enter the vendor:\nVendor: ");
         String vendor = scanner.nextLine();
         System.out.print("Description: ");
         String description = scanner.nextLine();
 
-        return new Transaction(dateNow.toString(),timeNow.format(TIME_FMT),amount,vendor,description);
+        return new Transaction(dateNow.toString(),timeNow.format(TIME_FMT),description,vendor,amount);
     }
 }
