@@ -175,7 +175,7 @@ public class FinancialTracker {
             bufferedWriter.close();
 
             loadTransactions(FILE_NAME);
-            System.out.println(lastTransaction + " Payed Successfully");
+            System.out.println(transaction + " Payed Successfully");
             System.out.println("X TO exit or anything for new payment:");
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("x")){
@@ -232,9 +232,27 @@ public class FinancialTracker {
 
     }
 
-    private static void displayDeposits() { /* TODO – only amount > 0               */ }
+    private static void displayDeposits() { /* TODO – only amount > 0               */
+        System.out.println("Deposits");
+        for (int i = transactions.size()-1; i >=0 ; i--) {
+            Transaction transaction = transactions.get(i);
+            if (!transaction.getAmount().startsWith("-")){
+                System.out.println(transaction);
+            }
 
-    private static void displayPayments() { /* TODO – only amount < 0               */ }
+        }
+    }
+
+    private static void displayPayments() { /* TODO – only amount < 0               */
+        System.out.println("Payments");
+        for (int i = transactions.size()-1; i >=0 ; i--) {
+            Transaction transaction = transactions.get(i);
+            if (transaction.getAmount().startsWith("-")){
+                System.out.println(transaction);
+            }
+
+        }
+    }
 
     /* ------------------------------------------------------------------
        Reports menu
