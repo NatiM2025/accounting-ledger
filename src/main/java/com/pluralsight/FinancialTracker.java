@@ -278,7 +278,11 @@ public class FinancialTracker {
                 case "2" -> {previousMonthReport();/* TODO – previous month report */ }
                 case "3" -> {yearToDateReport();/* TODO – year-to-date report   */ }
                 case "4" -> {previousYearReport();/* TODO – previous year report  */ }
-                case "5" -> {/* TODO – prompt for vendor then report */ }
+                case "5" -> {
+                    System.out.println("Pleas enter the vendor\nVendor:");
+                   String userVendor = scanner.nextLine();
+                   filterTransactionsByVendor(userVendor);
+                    /* TODO – prompt for vendor then report */ }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
                 default -> System.out.println("Invalid option");
@@ -303,6 +307,14 @@ public class FinancialTracker {
 
     private static void filterTransactionsByVendor(String vendor) {
         // TODO – iterate transactions, print those with matching vendor
+        for (int i = transactions.size() -1 ; i >=0 ; i--) {
+            Transaction transaction = transactions.get(i);
+           String  transactionVendor = transaction.getVendor();
+           if (transactionVendor.equalsIgnoreCase(vendor)){
+               System.out.println(transaction);
+           }
+
+        }
     }
 
     private static void customSearch(Scanner scanner) {
