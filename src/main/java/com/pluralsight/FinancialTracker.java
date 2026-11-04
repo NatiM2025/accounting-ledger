@@ -130,14 +130,14 @@ public class FinancialTracker {
 
                 //saving to CSV file.
                 Transaction transaction = transactionInfo(scanner);
-                transactions.add(transaction);
                 bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
-                        + transaction.getVendor() + " |" + "+" + transaction.getAmount());
+                        + transaction.getVendor() + " | " + "+" + transaction.getAmount());
 
                 bufferedWriter.newLine();
+                transactions.add(transaction);
                 bufferedWriter.close();
                 loadTransactions(FILE_NAME);
-                System.out.println(lastTransaction + " Deposited successfully\n");
+                System.out.println(transaction + " Deposited successfully\n");
                 System.out.println("X TO exit or anything for new deposit:");
                 String input = scanner.nextLine();
                 if (input.equalsIgnoreCase("x")){
@@ -163,11 +163,14 @@ public class FinancialTracker {
         boolean exit = false;
         while (!exit){
         try {
+
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILE_NAME,true));
             Transaction transaction = transactionInfo(scanner);
-            transactions.add(transaction);
+
             bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
-                    + transaction.getVendor() + " |" + "-" + transaction.getAmount());
+                    + transaction.getVendor() + " | " + "-" + transaction.getAmount());
+
+            transactions.add(transaction);
             bufferedWriter.newLine();
             bufferedWriter.close();
 
