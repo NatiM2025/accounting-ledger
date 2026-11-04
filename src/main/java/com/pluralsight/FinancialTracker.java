@@ -39,11 +39,10 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-    LocalDate dateNow = LocalDate.now();
    public static String lastTransaction;    // Holds latest transaction
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
-
+        //displayLedger();
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -84,29 +83,30 @@ public class FinancialTracker {
         //       and add it to the transactions list.
 
         try {
+            // creates new file if there is no file created before.
+            transactions.clear();
+            File file = new File(FILE_NAME);
+            if (!file.exists()){
+                file.createNewFile();
+            }
 
-            BufferedWriter bufferedWriter =new BufferedWriter(new FileWriter(FILE_NAME,true));
-            bufferedWriter.newLine();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String line;
             String amount = null;
+            // splitting the line
             while ((line = bufferedReader.readLine()) != null){
-                String[] parts =line.split("\\|");
-                Transaction transaction = new Transaction(parts[0],parts[1],parts[2],parts[3]," $"+ parts[4]);
-                lastTransaction = transaction.toString();
-                amount = "$" + parts[4];
+                String[] parts = line.split("\\|");
 
-            }
-            if (lastTransaction != null){
-                System.out.println("Latest Transaction:");
-                System.out.println(amount);
-
-            }else {
-                System.out.println("no transaction yet");
+                if (parts.length != 5) {
+                    System.out.println("Invalid transaction record: " + line);
+                    continue;
+                }
+                Transaction transaction = new Transaction(parts[0].trim(),parts[1].trim(),parts[2].trim(),parts[3].trim(),parts[4].trim());
+                transactions.add(transaction);
             }
 
         } catch (Exception e) {
-            System.out.println("Something went wrong " + e);
+            System.out.println("Something went wrong " + e.getMessage());
         }
     }
 
@@ -122,6 +122,7 @@ public class FinancialTracker {
      */
     // This method asks the user for deposit information and saves it to CSV file.
     private static void addDeposit(Scanner scanner) {
+        System.out.println("Deposit");
         boolean exit = false;
         while (!exit) {
             try {
@@ -137,7 +138,7 @@ public class FinancialTracker {
                 bufferedWriter.close();
                 loadTransactions(FILE_NAME);
                 System.out.println(lastTransaction + " Deposited successfully\n");
-                System.out.println("X TO exit");
+                System.out.println("X TO exit or anything for new deposit:");
                 String input = scanner.nextLine();
                 if (input.equalsIgnoreCase("x")){
                     exit = true;
@@ -158,6 +159,7 @@ public class FinancialTracker {
     private static void addPayment(Scanner scanner) {
         // TODO
         // saving to file
+        System.out.println("Payment");
         boolean exit = false;
         while (!exit){
         try {
@@ -171,7 +173,7 @@ public class FinancialTracker {
 
             loadTransactions(FILE_NAME);
             System.out.println(lastTransaction + " Payed Successfully");
-            System.out.println("X TO exit");
+            System.out.println("X TO exit or anything for new payment:");
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("x")){
                 exit = true;
@@ -212,7 +214,20 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger() { /* TODO – print all transactions in column format, newest first */ }
+    private static void displayLedger() { /* TODO – print all transactions in column format, newest first */
+
+        System.out.println("All transactions");
+        if(transactions.isEmpty()){
+            System.out.println("No transaction found");
+            return;
+        }
+        for (int i = transactions.size()- 1; i>= 0; i--) {
+            Transaction transaction = transactions.get(i);
+            System.out.println("Date: " + transaction.getDate() + " Time: " + transaction.getTime() + " Vendor: " + transaction.getVendor() + " Description: " + transaction.getDescription() + " Amount: $" + transaction.getAmount());
+
+        }
+
+    }
 
     private static void displayDeposits() { /* TODO – only amount > 0               */ }
 
@@ -287,7 +302,7 @@ public class FinancialTracker {
         System.out.println();
         String amount = "";
         while (true){
-            System.out.println("Please Enter amount:\nAmount: ");
+            System.out.print("Please Enter amount\nAmount: ");
            if (scanner.hasNextDouble()){
                amount = scanner.nextLine();
                break;
@@ -297,7 +312,7 @@ public class FinancialTracker {
            }
         }
 
-        System.out.println("Please Enter the vendor:\nVendor: ");
+        System.out.print("Please Enter the vendor\nVendor: ");
         String vendor = scanner.nextLine();
         System.out.print("Description: ");
         String description = scanner.nextLine();
