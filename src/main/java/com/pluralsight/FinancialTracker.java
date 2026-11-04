@@ -231,7 +231,7 @@ public class FinancialTracker {
         }
 
     }
-
+    //display Deposit using "-" to identify and list the newer first.
     private static void displayDeposits() { /* TODO – only amount > 0               */
         System.out.println("Deposits");
         for (int i = transactions.size()-1; i >=0 ; i--) {
@@ -243,6 +243,7 @@ public class FinancialTracker {
         }
     }
 
+    //display payment using "-" to identify and list the newer first.
     private static void displayPayments() { /* TODO – only amount < 0               */
         System.out.println("Payments");
         for (int i = transactions.size()-1; i >=0 ; i--) {
@@ -273,10 +274,10 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> {/* TODO – month-to-date report */ }
-                case "2" -> {/* TODO – previous month report */ }
-                case "3" -> {/* TODO – year-to-date report   */ }
-                case "4" -> {/* TODO – previous year report  */ }
+                case "1" -> {monthToDateReport();/* TODO – month-to-date report */ }
+                case "2" -> {previousMonthReport();/* TODO – previous month report */ }
+                case "3" -> {yearToDateReport();/* TODO – year-to-date report   */ }
+                case "4" -> {previousYearReport();/* TODO – previous year report  */ }
                 case "5" -> {/* TODO – prompt for vendor then report */ }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
@@ -290,6 +291,14 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
         // TODO – iterate transactions, print those within the range
+        for (int i = transactions.size() -1; i >= 0 ; i--) {
+            Transaction transaction = transactions.get(i);
+            LocalDate transactionDate = parseDate(transaction.getDate());
+            if(transactionDate != null && !transactionDate.isBefore(start) && !transactionDate.isAfter(end)){
+                System.out.println(transaction);
+
+            }
+        }
     }
 
     private static void filterTransactionsByVendor(String vendor) {
@@ -306,12 +315,20 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static LocalDate parseDate(String s) {
         /* TODO – return LocalDate or null */
-        return null;
+        try {
+            return LocalDate.parse(s);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     private static Double parseDouble(String s) {
         /* TODO – return Double   or null */
+        try {
+            return Double.parseDouble(s);
+        }catch (Exception e){
         return null;
+        }
     }
     // getting user information to reuse there info
     public static Transaction transactionInfo (Scanner scanner){
@@ -339,5 +356,32 @@ public class FinancialTracker {
         String description = scanner.nextLine();
 
         return new Transaction(dateNow.toString(),timeNow.format(TIME_FMT),description,vendor,amount);
+    }
+
+    public static void monthToDateReport (){
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.withDayOfMonth(1);
+        filterTransactionsByDate(start,today);
+    }
+    public static void previousMonthReport (){
+        LocalDate today = LocalDate.now();
+        LocalDate previousMonth =today.minusMonths(1);
+        LocalDate start = previousMonth.withDayOfMonth(1);
+        LocalDate end = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth());
+        filterTransactionsByDate(start,end);
+    }
+    public static void yearToDateReport (){
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.withDayOfYear(1);
+        filterTransactionsByDate(start,today);
+    }
+
+    public static void previousYearReport (){
+        LocalDate today = LocalDate.now();
+        LocalDate previousYear = today.minusYears(1);
+        LocalDate start = previousYear.withDayOfYear(1);
+        LocalDate end = previousYear.withDayOfMonth(previousYear.lengthOfYear());
+
+        filterTransactionsByDate(start,end);
     }
 }
