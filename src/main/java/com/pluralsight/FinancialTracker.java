@@ -93,7 +93,6 @@ public class FinancialTracker {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String line;
             String amount = null;
-            // splitting the line
             while ((line = bufferedReader.readLine()) != null){
                 String[] parts = line.split("\\|");
 
@@ -169,13 +168,12 @@ public class FinancialTracker {
 
             bufferedWriter.write(transaction.getDate() + " | " + transaction.getTime() + " | " + transaction.getDescription() + " | "
                     + transaction.getVendor() + " | " + "-" + transaction.getAmount());
-
             transactions.add(transaction);
             bufferedWriter.newLine();
             bufferedWriter.close();
 
             loadTransactions(FILE_NAME);
-            System.out.println(transaction + " Payed Successfully");
+            System.out.println(transaction + " Payed Successfully\n");
             System.out.println("X TO exit or anything for new payment:");
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("x")){
@@ -316,17 +314,37 @@ public class FinancialTracker {
 
         }
     }
-
     private static void customSearch(Scanner scanner) {
         // TODO – prompt for any combination of date range, description,
         //        vendor, and exact amount, then display matches
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        Double amount = null;
         System.out.println("pleas enter Your filter");
-        System.out.println("yyy-mm-dd");
-        System.out.print("start date: ");
-        String userStartDate = scanner.nextLine();
-        System.out.println("yyy-mm-dd");
-        System.out.print("End date: ");
-        String userEndDate = scanner.nextLine();
+        while (true){
+            System.out.println("yyy-mm-dd");
+            System.out.print("start date: ");
+            String userStartDate = scanner.nextLine();
+            try {
+                startDate = LocalDate.parse(userStartDate);
+                break;
+            }catch (Exception e){
+                System.out.println("Invalid input!");
+            }
+        } while (true) {
+            System.out.println("yyy-mm-dd");
+            System.out.print("End date: ");
+            String userEndDate = scanner.nextLine();
+
+            try {
+                endDate = LocalDate.parse(userEndDate);
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input!");
+
+            }
+        }
+
         System.out.print("Vendor: ");
         String userVendor = scanner.nextLine();
         System.out.print("Description: ");
@@ -334,24 +352,6 @@ public class FinancialTracker {
         System.out.print("Exact amount: ");
         String userAmount = scanner.nextLine();
 
-        LocalDate startDate = null;
-        LocalDate endDate = null;
-        Double amount = null;
-        if (!userStartDate.isEmpty()){
-            try {
-                startDate = LocalDate.parse(userStartDate);
-
-            } catch (Exception e) {
-                System.out.println("Error format" + e);
-            }
-        }
-        if (!userEndDate.isEmpty()){
-            try {
-                endDate = LocalDate.parse(userEndDate);
-            } catch (Exception e) {
-                System.out.println("Error format" + e);
-            }
-        }
         if (!userAmount.isEmpty()){
             amount = Math.abs(Double.parseDouble(userAmount));
         }
@@ -448,7 +448,7 @@ public class FinancialTracker {
         LocalDate today = LocalDate.now();
         LocalDate previousYear = today.minusYears(1);
         LocalDate start = previousYear.withDayOfYear(1);
-        LocalDate end = previousYear.withDayOfMonth(previousYear.lengthOfYear());
+        LocalDate end = previousYear.withDayOfYear(previousYear.lengthOfYear());
 
         filterTransactionsByDate(start,end);
     }
