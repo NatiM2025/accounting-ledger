@@ -320,6 +320,63 @@ public class FinancialTracker {
     private static void customSearch(Scanner scanner) {
         // TODO – prompt for any combination of date range, description,
         //        vendor, and exact amount, then display matches
+        System.out.println("pleas enter Your filter");
+        System.out.println("yyy-mm-dd");
+        System.out.print("start date: ");
+        String userStartDate = scanner.nextLine();
+        System.out.println("yyy-mm-dd");
+        System.out.print("End date: ");
+        String userEndDate = scanner.nextLine();
+        System.out.print("Vendor: ");
+        String userVendor = scanner.nextLine();
+        System.out.print("Description: ");
+        String userDescription = scanner.nextLine();
+        System.out.print("Exact amount: ");
+        String userAmount = scanner.nextLine();
+
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        Double amount = null;
+        if (!userStartDate.isEmpty()){
+            try {
+                startDate = LocalDate.parse(userStartDate);
+
+            } catch (Exception e) {
+                System.out.println("Error format" + e);
+            }
+        }
+        if (!userEndDate.isEmpty()){
+            try {
+                endDate = LocalDate.parse(userEndDate);
+            } catch (Exception e) {
+                System.out.println("Error format" + e);
+            }
+        }
+        if (!userAmount.isEmpty()){
+            amount = Math.abs(Double.parseDouble(userAmount));
+        }
+
+        for(Transaction transaction : transactions){
+            LocalDate savedDate = LocalDate.parse(transaction.getDate());
+            double transactionAmount = Math.abs(Double.parseDouble(transaction.getAmount()));
+            if (!userAmount.isEmpty() && (transactionAmount != amount)){
+                continue;
+            }
+            if (!userDescription.isEmpty() && (!transaction.getDescription().equalsIgnoreCase(userDescription))){
+                continue;
+            }if (!userVendor.isEmpty() && (!transaction.getVendor().equalsIgnoreCase(userVendor))){
+                continue;
+            }
+
+            if (startDate != null && savedDate.isBefore(startDate) ){
+                continue;
+            }if (endDate != null && savedDate.isAfter(endDate) ){
+                continue;
+            }
+            System.out.println(transaction);
+
+        }
+
     }
     /* ------------------------------------------------------------------
        Utility parsers (you can reuse in many places)
