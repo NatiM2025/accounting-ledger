@@ -7,19 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
- * Capstone skeleton – personal finance tracker.
- * ------------------------------------------------
- * File format  (pipe-delimited)
- *     yyyy-MM-dd|HH:mm:ss|description|vendor|amount
- * A deposit has a positive amount; a payment is stored
- * as a negative amount.
- *
- * TODO: create the Transaction class in this package first.
- *       One object = one line of the file. Decide its fields from
- *       the file format above, add a constructor and getters.
- *       This class does not compile until Transaction exists.
- */
+
 public class FinancialTracker {
 
     /* ------------------------------------------------------------------
@@ -39,10 +27,9 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-   public static String lastTransaction;    // Holds latest transaction
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
-        //displayLedger();
+
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -71,12 +58,7 @@ public class FinancialTracker {
        File I/O
        ------------------------------------------------------------------ */
 
-    /**
-     * Load transactions from FILE_NAME.
-     * • If the file doesn’t exist, create an empty one so that future writes succeed.
-     * • Each line looks like: date|time|description|vendor|amount
-     */
-    //listing all the csv file history.
+
     public static void loadTransactions(String fileName) {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
@@ -92,7 +74,7 @@ public class FinancialTracker {
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String line;
-            String amount = null;
+            bufferedReader.close();
             while ((line = bufferedReader.readLine()) != null){
                 String[] parts = line.split("\\|");
 
@@ -102,6 +84,7 @@ public class FinancialTracker {
                 }
                 Transaction transaction = new Transaction(parts[0].trim(),parts[1].trim(),parts[2].trim(),parts[3].trim(),parts[4].trim());
                 transactions.add(transaction);
+
             }
 
         } catch (Exception e) {
@@ -135,7 +118,6 @@ public class FinancialTracker {
                 bufferedWriter.newLine();
                 transactions.add(transaction);
                 bufferedWriter.close();
-                loadTransactions(FILE_NAME);
                 System.out.println(transaction + " Deposited successfully\n");
                 System.out.println("X TO exit or anything for new deposit:");
                 String input = scanner.nextLine();
@@ -171,8 +153,6 @@ public class FinancialTracker {
             transactions.add(transaction);
             bufferedWriter.newLine();
             bufferedWriter.close();
-
-            loadTransactions(FILE_NAME);
             System.out.println(transaction + " Payed Successfully\n");
             System.out.println("X TO exit or anything for new payment:");
             String input = scanner.nextLine();
