@@ -1,11 +1,11 @@
 package com.pluralsight;
 
 public class Transaction {
-    String date;
-    String time;
-    String description;
-    String vendor;
-    String amount;
+   private String date;
+   private String time;
+   private String description;
+   private String vendor;
+   private String amount;
 
     public Transaction(String date, String time, String description, String vendor, String amount) {
         this.date = date;
