@@ -63,11 +63,11 @@ The application saves the transactions in a file so users can see them again whe
 ## Demo
 
 #### Main
-![Main menu](/home/natanim/Desktop/YUU/pluralsight/capstones/accounting-ledger/images/menu.png)
+![Main menu](images/menu.png)
 #### depositing
-![One feature in action](/home/natanim/Desktop/YUU/pluralsight/capstones/accounting-ledger/images/imageDeposit.png)
+![One feature in action](images/imageDeposit.png)
 #### Error or invalid
-![Error](/home/natanim/Desktop/YUU/pluralsight/capstones/accounting-ledger/images/image error.png)
+![Error](images/imageError.png)
 
 ## A piece of code I am proud of
 
