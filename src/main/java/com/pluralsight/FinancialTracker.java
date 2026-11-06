@@ -74,7 +74,6 @@ public class FinancialTracker {
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String line;
-            bufferedReader.close();
             while ((line = bufferedReader.readLine()) != null){
                 String[] parts = line.split("\\|");
 
@@ -86,7 +85,7 @@ public class FinancialTracker {
                 transactions.add(transaction);
 
             }
-
+              bufferedReader.close();
         } catch (Exception e) {
             System.out.println("Something went wrong " + e.getMessage());
         }
@@ -391,7 +390,11 @@ public class FinancialTracker {
             System.out.print("Please Enter amount\nAmount: ");
            if (scanner.hasNextDouble()){
                amount = scanner.nextLine();
-               break;
+               Double userAmount = parseDouble(amount);
+               if(userAmount != null && userAmount > 0 ){
+                   break;
+               }
+
            }else {
                scanner.nextLine();
                System.out.println("Invalid input ");
