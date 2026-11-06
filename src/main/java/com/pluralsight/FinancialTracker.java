@@ -276,17 +276,24 @@ public class FinancialTracker {
             System.out.println("yyy-mm-dd");
             System.out.print("start date: ");
             String userStartDate = scanner.nextLine();
-            try {
+            if (userStartDate.isEmpty()){
+                break;
+            }
+             try {
                 startDate = LocalDate.parse(userStartDate);
                 break;
-            }catch (Exception e){
+             }catch (Exception e){
                 System.out.println("Invalid input!");
-            }
+             }
+
         } while (true) {
             System.out.println("yyy-mm-dd");
             System.out.print("End date: ");
             String userEndDate = scanner.nextLine();
 
+            if(userEndDate.isEmpty()){
+                break;
+            }
             try {
                 endDate = LocalDate.parse(userEndDate);
                 break;
